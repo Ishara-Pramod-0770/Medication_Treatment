@@ -11,11 +11,8 @@ function App() {
     <div className="App">
       <Router>
         <Routes>
-          <Route path="/" element={<UploadImage />} />
-          {/* <Route path="/severityoutput" element={<SeverityOutput />} /> */}
+          <Route path="/" element={<PredictionForm />} />
           <Route path="/output" element={<SeverityLevels />} />
-          <Route path="/uploadform" element={<UploadForm />} />
-          <Route path="/predict" element={<PredictionForm />} />
         </Routes>
       </Router>
     </div>

@@ -1,10 +1,11 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function PredictionForm() {
   const [file, setFile] = useState(null);
   const [disease, setDisease] = useState("");
-  const [result, setResult] = useState(null);
   const [error, setError] = useState(null);
+  const navigate = useNavigate(); // React Router's hook for navigation
 
   const handleFileChange = (event) => {
     setFile(event.target.files[0]);
@@ -38,7 +39,9 @@ function PredictionForm() {
       }
 
       const data = await response.json();
-      setResult(data);
+
+      // Navigate to the output page with result data as state
+      navigate("/output", { state: { result: data, disease } });
     } catch (err) {
       setError(err.message);
     }
@@ -66,6 +69,7 @@ function PredictionForm() {
             placeholder="Enter the disease name"
           />
         </div>
+        {error && <p className="text-red-500">{error}</p>}
         <button
           type="submit"
           className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600"
@@ -73,28 +77,6 @@ function PredictionForm() {
           Predict
         </button>
       </form>
-
-      {error && (
-        <div className="mt-4 text-red-500">
-          <p>Error: {error}</p>
-        </div>
-      )}
-
-      {result && (
-        <div className="mt-6 p-4 bg-green-100 rounded-md text-black">
-          <h2 className="text-lg font-bold mb-2">Prediction Results</h2>
-          <p><strong>Disease:</strong> {result.disease}</p>
-          <p><strong>Predicted Class:</strong> {result.predicted_class}</p>
-          <p><strong>Severity Level:</strong> {result.severity_level}</p>
-          <p><strong>Severity Value:</strong> {result.severity}</p>
-          <p><strong>Severity Percentages:</strong></p>
-          <ul>
-            {Object.entries(result.severity_percentages).map(([level, value]) => (
-              <li key={level} className="ml-4">- {level}: {value}</li>
-            ))}
-          </ul>
-        </div>
-      )}
     </div>
   );
 }
